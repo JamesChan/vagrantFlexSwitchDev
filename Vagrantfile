@@ -13,7 +13,7 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
-
+  config.vm.hostname = "FlexDev"
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -32,6 +32,7 @@ Vagrant.configure(2) do |config|
   # Bridged networks make the machine appear as another physical device on
   # your network.
   config.vm.network "public_network"
+  config.vm.synced_folder "/Users/james/mywork/flexswitch", "/opt/snaproute"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -48,7 +49,8 @@ Vagrant.configure(2) do |config|
   #   vb.gui = true
   #
     # Customize the amount of memory on the VM:
-    vb.memory = "8192"
+    vb.memory = "4096"
+    vb.customize ["modifyvm", :id, "--name", "FlexSwitchDev"]
   end
   #
   # View the documentation for the provider you are using for more
@@ -67,13 +69,13 @@ Vagrant.configure(2) do |config|
     echo "Provisioning VM"
     sudo apt-get install -y build-essential fabric git wget
     sudo apt-get install -y libnl-3-200 libnl-genl-3-200
-    wget https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz
+    wget https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
     sudo apt-get install -y curl
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
     sudo apt-get install -y git-lfs
-    tar -C /usr/local -xzf go1.5.3.linux-amd64.tar.gz
-    mkdir git
+    tar -C /usr/local -xzf go1.8.linux-amd64.tar.gz
+    mkdir -p git
     chown vagrant git
     cd git
     echo "export GOPATH=~/git/snaproute:~/git/external:~/git/generated" >> /home/vagrant/.bashrc
